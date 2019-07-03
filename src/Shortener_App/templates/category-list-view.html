@@ -1,0 +1,14 @@
+{% extends 'base.html' %}
+
+{% block content %}
+    <ul class="list-group">
+        {% for object in object_list %}
+            <li><strong>{{ object }}</strong> | {{ object.justurl_set.count }}</li>
+            {% for link in object.justurl_set.all %}
+            <ul class="list-group">
+                <li class="list-group-item">&ensp;{{ link.short_url }}</li>
+            </ul>
+                {% endfor %}
+        {% endfor %}
+    </ul>
+{% endblock %}
