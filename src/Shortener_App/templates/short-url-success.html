@@ -1,0 +1,12 @@
+{% extends 'base.html' %}
+
+{% block title %}
+    Success
+{% endblock %}
+
+{% block content %}
+    <h2>Success!</h2>
+    <p>Your url : <a href="{{ object.input_url }}">{{ object.input_url }}</a> is shorted</p>
+    <a class="btn btn-link" href="{{ object.input_url }}">{{ object.short_url }}</a>
+    <a class="btn btn-primary" href="{% url 'home-view' %}">+ New</a>
+{% endblock %}
