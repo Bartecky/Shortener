@@ -4,6 +4,7 @@ from django.core.validators import URLValidator
 from django.core.exceptions import ValidationError
 import re
 
+
 class ShortUrlForm(forms.ModelForm):
     category = forms.ModelChoiceField(queryset=Category.objects.all(), required=False)
 
@@ -60,6 +61,18 @@ class JustURLForm(forms.ModelForm):
         except:
             raise ValidationError('Invalid URL!')
         return result
+
+
+class ManyURLSForm(forms.ModelForm):
+    input_url = forms.CharField(max_length=1024, widget=forms.Textarea(attrs={
+        'cols': 40, 'rows': 15
+    }))
+
+    class Meta:
+        model = JustURL
+        fields = [
+            'input_url',
+        ]
 
 
 class CategoryModelForm(forms.ModelForm):

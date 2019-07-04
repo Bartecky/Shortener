@@ -1,4 +1,4 @@
-import string, random
+import string, random, csv
 
 
 def token_generator(size=8, chars=string.digits + string.ascii_letters):
@@ -17,3 +17,13 @@ def create_short_url(instance):
     if instance_class.objects.filter(short_url=token).exists():
         return create_short_url(instance)
     return token
+
+
+def generate_csv(data):
+    """
+    Creates new csv file with rows containing data, closes file
+    """
+    with open('many_urls.csv', 'a') as csvFile:
+        writer = csv.writer(csvFile, delimiter=';')
+        writer.writerows(data)
+    csvFile.close()
