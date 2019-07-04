@@ -1,7 +1,8 @@
 from django.shortcuts import render
+from django.urls import reverse_lazy
 from django.views import View
-from django.views.generic import CreateView, ListView
-from .forms import ShortUrlForm, JustURLForm, CategoryModelForm, ManyURLSForm
+from django.views.generic import CreateView, ListView, DetailView, UpdateView, DeleteView
+from .forms import ShortUrlForm, JustURLForm, CategoryModelForm, ManyURLSForm, JustULRUpdateForm
 from .models import JustURL, Category
 from .utils import create_short_url, token_generator, generate_csv
 
@@ -26,6 +27,24 @@ class HomeView(View):
             return render(request, 'short-url-success.html', {'object': created})
         else:
             return render(request, 'home.html', {'form': form})
+
+
+class URLDetailView(DetailView):
+    queryset = JustURL.objects.all()
+    template_name = 'url-detail-view.html'
+
+
+class URLUpdateView(UpdateView):
+    queryset = JustURL.objects.all()
+    form_class = JustULRUpdateForm
+    template_name = 'url-update-view.html'
+    success_url = reverse_lazy('home-view')
+
+
+class URLDeleteView(DeleteView):
+    model = JustURL
+    template_name = 'url-delete-view.html'
+    success_url = reverse_lazy('home-view')
 
 
 class CustomShortURLCreateView(View):
@@ -74,7 +93,8 @@ class ShortManyURLSView(View):
                 data = [instance.input_url, instance.short_url]
                 data_list.append(data)
             generate_csv(data_list)
-            return render(request, 'short-many-urls.html', {'form': form})
+        return render(request, 'short-many-urls.html', {'form': form})
+
 
 class CategoryCreateView(CreateView):
     template_name = 'category-create-view.html'

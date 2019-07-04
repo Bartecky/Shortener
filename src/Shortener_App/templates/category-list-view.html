@@ -1,14 +1,19 @@
 {% extends 'base.html' %}
 
+{% block title %}
+    Category List
+{% endblock %}
+
 {% block content %}
+    <h3>Category List</h3>
     <ul class="list-group">
         {% for object in object_list %}
             <li><strong>{{ object }}</strong> | {{ object.justurl_set.count }}</li>
-            {% for link in object.justurl_set.all %}
-            <ul class="list-group">
-                <li class="list-group-item">&ensp;{{ link.short_url }}</li>
-            </ul>
-                {% endfor %}
+{#            {% for link in object.justurl_set.all %}#}
+{#            <ul class="list-group">#}
+{#                <li class="list-group-item">&ensp;<a href="http://{{ link.input_url }}">{{ link.short_url }}</a></li>#}
+{#            </ul>#}
+{#                {% endfor %}#}
         {% endfor %}
     </ul>
 {% endblock %}

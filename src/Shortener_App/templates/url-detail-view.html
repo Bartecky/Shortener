@@ -1,0 +1,22 @@
+{% extends 'base.html' %}
+
+{% block content %}
+    <h3>Detail of {{ object.short_url }}</h3>
+    <p>Parent URL -> <a href="{{ object }}">{{ object }}</a></p>
+    <p>Active -
+        {% if object.active %}
+            Yes
+        {% else %}
+            No
+        {% endif %}
+    </p>
+    <p>Category -
+        {% if object.category %}
+            {{ object.category }}
+        {% else %}
+            No
+        {% endif %}</p>
+    <small><a href="{% url 'url-update-view' object.pk %}">Update!</a></small>
+    <small><a href="{% url 'url-delete-view' object.pk %}">Delete!</a></small>
+
+{% endblock %}

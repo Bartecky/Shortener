@@ -75,6 +75,15 @@ class ManyURLSForm(forms.ModelForm):
         ]
 
 
+class JustULRUpdateForm(forms.ModelForm):
+    class Meta:
+        model = JustURL
+        fields = [
+            'active',
+            'category'
+        ]
+
+
 class CategoryModelForm(forms.ModelForm):
     class Meta:
         model = Category
