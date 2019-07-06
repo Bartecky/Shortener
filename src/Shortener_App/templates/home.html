@@ -1,21 +1,20 @@
 {% extends 'base.html' %}
+{% load crispy_forms_tags %}
 
 {% block title %}
     Home
 {% endblock %}
 
 {% block content %}
-
     {% if message %}
         <h2>{{ message }}</h2>
     {% endif %}
 
-    <h3>Paste your long url and look what i can</h3>
+    <h3>Paste your long url and look what i can...</h3>
 
     <form method="post" action=""> {% csrf_token %}
-        {{ form.as_p }}<br>
+        {{ form|crispy }}<br>
         <input class="btn btn-primary" type="submit" value="Shorten!">
-        <a class="btn btn-info" href="{% url 'add-custom-url' %}">Have token? Check it!</a>
+        <a class="btn btn-link" href="{% url 'add-custom-url' %}">Have token? Check it!</a>
     </form>
-
 {% endblock %}

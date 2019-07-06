@@ -6,6 +6,7 @@ import re
 
 
 class ShortUrlForm(forms.ModelForm):
+    input_url = forms.CharField(widget=forms.TextInput(attrs={'placeholder': 'paste the url here'}))
     category = forms.ModelChoiceField(queryset=Category.objects.all(), required=False)
 
     class Meta:
@@ -14,6 +15,7 @@ class ShortUrlForm(forms.ModelForm):
             'input_url',
             'category'
         ]
+
 
     def clean_input_url(self):
         url = self.cleaned_data['input_url']
@@ -65,7 +67,7 @@ class JustURLForm(forms.ModelForm):
 
 class ManyURLSForm(forms.ModelForm):
     input_url = forms.CharField(max_length=1024, widget=forms.Textarea(attrs={
-        'cols': 40, 'rows': 15
+        'cols': 40, 'rows': 15, 'placeholder': 'Paste here many links separated by special characters, excluding "."'
     }))
 
     class Meta:
@@ -85,16 +87,26 @@ class JustULRUpdateForm(forms.ModelForm):
 
 
 class CategoryModelForm(forms.ModelForm):
+    description = forms.CharField(required=False, widget=forms.Textarea(attrs={
+        'cols': 40, 'rows': 15, 'placeholder': 'Describe category'
+    }))
+
     class Meta:
         model = Category
         fields = [
             'name',
             'description'
         ]
-        required = (
-            'name'
-        )
-        widgets = {
-            'description': forms.Textarea(attrs={'cols': 40, 'rows': 15},
-                                          ),
-        }
+
+
+class CategoryUpdateModelForm(forms.ModelForm):
+    description = forms.CharField(required=False, widget=forms.Textarea(attrs={
+        'cols': 40, 'rows': 15, 'placeholder': 'Describe category'
+    }))
+
+    class Meta:
+        model = Category
+        fields = [
+            'name',
+            'description'
+        ]

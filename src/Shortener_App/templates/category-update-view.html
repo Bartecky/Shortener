@@ -7,10 +7,10 @@
 {% endblock %}
 
 {% block content %}
-    <h3>Updating {{ object }} --- {{ object.short_url }}</h3>
+    <h3>Updating {{ object }}</h3>
     <form method="post" action=""> {% csrf_token %}
         {{ form|crispy }}
         <input class="btn btn-primary" type="submit" value="Update">
-        <a href="{% url 'url-detail-view' object.pk %}"><input type="button" class="btn btn-success" value="Back"></a>
+        <a href="{% url 'category-list-view' %}"><input type="button" class="btn btn-success" value="Back"></a>
     </form>
 {% endblock %}

@@ -1,12 +1,15 @@
 {% extends 'base.html' %}
+{% load crispy_forms_tags %}
 
 {% block title %}
     Add Category
 {% endblock %}
 
 {% block content %}
+    <h3>Create new category</h3>
     <form method="post" action="."> {% csrf_token %}
-        {{ form.as_p }}
+        {{ form|crispy }}
         <input class="btn btn-primary" type="submit" value="Add category!">
+        <a href="{% url 'home-view' %}"><input type="button" value="Home" class="btn btn-link"></a>
     </form>
 {% endblock %}

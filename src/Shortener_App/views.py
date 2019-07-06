@@ -1,8 +1,9 @@
-from django.shortcuts import render
+from django.shortcuts import render, redirect
 from django.urls import reverse_lazy
 from django.views import View
 from django.views.generic import CreateView, ListView, DetailView, UpdateView, DeleteView
-from .forms import ShortUrlForm, JustURLForm, CategoryModelForm, ManyURLSForm, JustULRUpdateForm
+from .forms import ShortUrlForm, JustURLForm, CategoryModelForm, ManyURLSForm, JustULRUpdateForm, \
+    CategoryUpdateModelForm
 from .models import JustURL, Category
 from .utils import create_short_url, token_generator, generate_csv
 
@@ -38,7 +39,6 @@ class URLUpdateView(UpdateView):
     queryset = JustURL.objects.all()
     form_class = JustULRUpdateForm
     template_name = 'url-update-view.html'
-    success_url = reverse_lazy('home-view')
 
 
 class URLDeleteView(DeleteView):
@@ -93,7 +93,9 @@ class ShortManyURLSView(View):
                 data = [instance.input_url, instance.short_url]
                 data_list.append(data)
             generate_csv(data_list)
-        return render(request, 'short-many-urls.html', {'form': form})
+        return render(request, 'home.html', {
+            'form': ShortUrlForm,
+            'message': 'Success! Saved data to file.'})
 
 
 class CategoryCreateView(CreateView):
@@ -104,3 +106,21 @@ class CategoryCreateView(CreateView):
 class CategoryListView(ListView):
     queryset = Category.objects.all()
     template_name = 'category-list-view.html'
+
+
+class CategoryDetailView(DetailView):
+    queryset = Category.objects.all()
+    template_name = 'category-detail-view.html'
+
+
+class CategoryUpdateView(UpdateView):
+    queryset = Category.objects.all()
+    form_class = CategoryUpdateModelForm
+    template_name = 'category-update-view.html'
+    success_url = reverse_lazy('category-list-view')
+
+
+class CategoryDeleteView(DeleteView):
+    model = Category
+    template_name = 'category-delete-view.html'
+    success_url = reverse_lazy('category-list-view')

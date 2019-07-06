@@ -1,22 +1,29 @@
 {% extends 'base.html' %}
 
+{% block title %}
+    Details
+{% endblock %}
+
 {% block content %}
-    <h3>Detail of {{ object.short_url }}</h3>
-    <p>Parent URL -> <a href="{{ object }}">{{ object }}</a></p>
+    <h3>Details of {{ object.short_url }}</h3>
+    <p>Parent URL : <a href="{{ object }}">{{ object }}</a></p>
     <p>Active -
         {% if object.active %}
-            Yes
+            Yes! <a href="{{ object }}"><input type="button" value="Redirect" class="btn btn-link"></a>
         {% else %}
-            No
+        No | <span style="color: red">Disabled</span>
         {% endif %}
     </p>
     <p>Category -
         {% if object.category %}
-            {{ object.category }}
+            <a href="{% url 'category-detail-view' object.category.pk %}"><input type="button" value="{{ object.category.name }}" class="btn btn-link"></a>
         {% else %}
             No
         {% endif %}</p>
-    <small><a href="{% url 'url-update-view' object.pk %}">Update!</a></small>
-    <small><a href="{% url 'url-delete-view' object.pk %}">Delete!</a></small>
-
+    <small><a href="{% url 'url-update-view' object.pk %}">Update</a> | </small>
+    <small><a href="{% url 'url-delete-view' object.pk %}">Delete</a></small>
+    <hr>
+    {% if object.category %}
+    <a href="{% url 'category-detail-view' object.category.pk %}"><input type="button" class="btn btn-success" value="Back"></a>
+    {% endif %}
 {% endblock %}

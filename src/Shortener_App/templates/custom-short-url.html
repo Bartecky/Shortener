@@ -1,4 +1,6 @@
 {% extends 'base.html' %}
+{% load crispy_forms_tags %}
+
 
 {% block title %}
     Custom Token
@@ -8,9 +10,10 @@
     {% if message %}
         <h3>{{ message }}</h3>
     {% endif %}
-
+    <h3>Put your own token!</h3>
     <form method="post" action=""> {% csrf_token %}
-        {{ form.as_p }}<br>
+        {{ form|crispy }}<br>
         <input class="btn btn-primary" type="submit" value="Shorten!">
+        <a href="{% url 'home-view' %}"><input type="button" value="Home" class="btn btn-link"></a>
     </form>
 {% endblock %}

@@ -1,0 +1,11 @@
+body {
+    background-color: #2E2E2E;
+    color: #ffffff;
+    }
+.btn-link {
+      color: #50dfec;
+      text-shadow: none;
+    }
+.btn-link:hover {
+      color: #000000;
+    }

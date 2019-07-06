@@ -5,10 +5,10 @@
 {% endblock %}
 
 {% block content %}
-    <h3>Deleting {{ object }} --- {{ object.short_url }}</h3>
+    <h3>Deleting {{ object }}</h3>
     <form method="post" action=""> {% csrf_token %}
         {{ form.as_p }}
         <input class="btn btn-success" type="submit" value="Delete">
-        <a href="{% url 'url-detail-view' object.pk %}"><input type="button" value="Back" class="btn btn-link"></a>
+        <a href="{% url 'category-detail-view' object.pk %}"><input type="button" value="Back" class="btn btn-link"></a>
     </form>
 {% endblock %}

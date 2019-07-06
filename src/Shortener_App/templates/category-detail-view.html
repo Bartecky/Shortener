@@ -1,0 +1,19 @@
+{% extends 'base.html' %}
+
+{% block title %}
+    Category Details
+{% endblock %}
+
+{% block content %}
+    <h4>{{ object.name }}</h4>
+    {% if object.description %}
+    <p><strong>Description:</strong> {{ object.description }}</p>
+    {% endif %}
+    <small><a href="{% url 'category-update-view' object.pk %}">Update</a> | </small>
+    <small><a href="{% url 'category-delete-view' object.pk %}">Delete</a></small>
+    <hr>
+    <h4>Links</h4>
+    {% for link in object.justurl_set.all %}
+        <a href="{% url 'url-detail-view' link.pk %}">{{ link.short_url }}</a><br>
+    {% endfor %}
+{% endblock %}
