@@ -44,8 +44,8 @@ class SuccessUrlView(View):
             ip = get_client_ip(request)
             client_agent = request.META['HTTP_USER_AGENT']
             clicktracker = ClickTracking.objects.create(
-                client_ip = ip,
-                user_agent = client_agent,
+                client_ip=ip,
+                user_agent=client_agent,
             )
             clicktracker.url.add(object)
             clicktracker.save()
@@ -170,8 +170,14 @@ class CategoryDeleteView(DeleteView):
     success_url = reverse_lazy('category-list-view')
 
 
+class ClickTrackingDetailView(View):
+    def get(self, request, pk, *args, **kwargs):
+        object = get_object_or_404(JustURL, pk=pk)
+        reports = object.clicktracking_set.all().order_by('timestamp')
+        return render(request, 'clicktracking-detail-view.html', {'object': object,
+                                                                  'reports': reports})
+
+
 def link_redirect(request, pk):
     instance = get_object_or_404(JustURL, pk=pk)
     return redirect(instance.input_url)
-
-

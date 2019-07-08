@@ -1,0 +1,22 @@
+{% extends 'base.html' %}
+{% block title %}
+    Click Reports
+{% endblock %}
+
+{% block content %}
+    <h3>{{ object }}</h3>
+    <table class="table" style="color: white">
+        <tr>
+            <th>Address IP</th>
+            <th>User Agent</th>
+            <th>Time</th>
+        </tr>
+    {% for report in reports %}
+        <tr>
+            <td>{{ report.client_ip }}</td>
+            <td>{{ report.user_agent }}</td>
+            <td>{{ report.timestamp }}</td>
+        </tr>
+    {% endfor %}
+    </table>
+{% endblock %}

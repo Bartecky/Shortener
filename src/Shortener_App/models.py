@@ -35,3 +35,7 @@ class ClickTracking(models.Model):
     client_ip = models.CharField(max_length=16)
     user_agent = models.CharField(max_length=128)
     timestamp = models.DateTimeField(auto_now_add=True)
+
+
+    def __str__(self):
+        return f'{self.timestamp} - {self.url}'

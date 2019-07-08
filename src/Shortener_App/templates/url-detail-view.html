@@ -7,7 +7,7 @@
 {% block content %}
     <h3>Details of {{ object.short_url }}</h3>
     <p>Parent URL : <a href="{{ object }}">{{ object.input_url }}</a></p>
-    <p>Active -
+    <p>Active:
         {% if object.active %}
             Yes!
             <form method="post" action=""> {% csrf_token %}
@@ -19,7 +19,16 @@
         {% endif %}
     </p>
     <p>
-        Counter: {{ object.count }}
+        Called:
+        <strong>
+        {% if object.count == 1%}
+            {{ object.count }} time - <a href="{% url 'clicktracking-detail-view' object.pk %}">see details</a>
+        {% elif object.count > 1 %}
+            {{ object.count }} times - <a href="{% url 'clicktracking-detail-view' object.pk %}">see details</a>
+        {% else %}
+            No... {{ object.count }}
+        {% endif %}
+        </strong>
     </p>
     <p>Category -
         {% if object.category %}
