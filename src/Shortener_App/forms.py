@@ -7,8 +7,8 @@ import re
 
 
 class ShortUrlForm(forms.ModelForm):
-    input_url = forms.CharField(widget=forms.TextInput(attrs={'placeholder': 'paste the url here'}))
-    category = forms.ModelChoiceField(queryset=Category.objects.all(), required=False)
+    input_url = forms.CharField(label='', widget=forms.TextInput(attrs={'placeholder': 'http://'}))
+    category = forms.ModelChoiceField(label='Choose category', queryset=Category.objects.all().order_by('name'), required=False)
 
     class Meta:
         model = JustURL
@@ -54,7 +54,7 @@ class JustURLForm(forms.ModelForm):
 
 
 class ManyURLSForm(forms.ModelForm):
-    input_url = forms.CharField(max_length=1024, widget=forms.Textarea(attrs={
+    input_url = forms.CharField(label='', max_length=1024, widget=forms.Textarea(attrs={
         'cols': 40, 'rows': 15, 'placeholder': 'Paste here many links separated by special characters, excluding "."'
     }))
 
@@ -75,6 +75,7 @@ class JustULRUpdateForm(forms.ModelForm):
 
 
 class CategoryModelForm(forms.ModelForm):
+    name = forms.CharField(label='', widget=forms.TextInput(attrs={'placeholder': 'enter category name'}))
     description = forms.CharField(required=False, widget=forms.Textarea(attrs={
         'cols': 40, 'rows': 15, 'placeholder': 'Describe category'
     }))

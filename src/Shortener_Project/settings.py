@@ -116,6 +116,8 @@ USE_TZ = True
 
 LOGIN_URL = reverse_lazy('home-view')
 
+SHORTCODE = 4
+
 # Static files (CSS, JavaScript, Images)
 # https://docs.djangoproject.com/en/2.2/howto/static-files/
 
