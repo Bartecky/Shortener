@@ -2,6 +2,7 @@ from django.shortcuts import render, get_object_or_404, reverse, redirect
 from django.urls import reverse_lazy
 from django.views import View
 from django.views.generic import CreateView, ListView, DetailView, UpdateView, DeleteView
+from django.contrib.auth.mixins import LoginRequiredMixin
 from .forms import ShortUrlForm, JustURLForm, CategoryModelForm, ManyURLSForm, JustULRUpdateForm, \
     CategoryUpdateModelForm, CounterCountingForm
 from .models import JustURL, Category, ClickTracking
@@ -54,7 +55,7 @@ class SuccessUrlView(View):
         return redirect('home-view')
 
 
-class URLDetailView(View):
+class URLDetailView(LoginRequiredMixin, View):
     def get(self, request, pk, *args, **kwargs):
         form = CounterCountingForm()
         object = JustURL.objects.get(pk=pk)
@@ -80,13 +81,13 @@ class URLDetailView(View):
                                                         'form': form})
 
 
-class URLUpdateView(UpdateView):
+class URLUpdateView(LoginRequiredMixin, UpdateView):
     queryset = JustURL.objects.all()
     form_class = JustULRUpdateForm
     template_name = 'url-update-view.html'
 
 
-class URLDeleteView(DeleteView):
+class URLDeleteView(LoginRequiredMixin, DeleteView):
     model = JustURL
     template_name = 'url-delete-view.html'
     success_url = reverse_lazy('home-view')
@@ -133,44 +134,45 @@ class ShortManyURLSView(View):
                 if not url.endswith(('.com', '.pl', '.de', '.uk')):
                     url += '.com'
                 instance = JustURL.objects.create(input_url=url, short_url=token_generator())
-                print(instance.input_url, instance.short_url)
                 instance.save()
                 data = [instance.input_url, instance.short_url]
                 data_list.append(data)
             generate_csv(data_list)
-        return render(request, 'home.html', {'form': ShortUrlForm,
-                                             'message': 'Success! Saved data to file.'})
+        return redirect('home-view')
 
 
-class CategoryCreateView(CreateView):
+class CategoryCreateView(LoginRequiredMixin, CreateView):
     template_name = 'category-create-view.html'
     form_class = CategoryModelForm
 
 
-class CategoryListView(ListView):
-    queryset = Category.objects.all()
+class CategoryListView(LoginRequiredMixin, ListView):
+    queryset = Category.objects.all().order_by('name')
     template_name = 'category-list-view.html'
 
 
-class CategoryDetailView(DetailView):
-    queryset = Category.objects.all()
-    template_name = 'category-detail-view.html'
+class CategoryDetailView(LoginRequiredMixin, View):
+    def get(self, request, pk, *args, **kwargs):
+        object = Category.objects.get(pk=pk)
+        visits = sum(link.count for link in object.justurl_set.all())
+        return render(request, 'category-detail-view.html', {'object': object,
+                                                             'visits': visits})
 
 
-class CategoryUpdateView(UpdateView):
+class CategoryUpdateView(LoginRequiredMixin, UpdateView):
     queryset = Category.objects.all()
     form_class = CategoryUpdateModelForm
     template_name = 'category-update-view.html'
     success_url = reverse_lazy('category-list-view')
 
 
-class CategoryDeleteView(DeleteView):
+class CategoryDeleteView(LoginRequiredMixin, DeleteView):
     model = Category
     template_name = 'category-delete-view.html'
     success_url = reverse_lazy('category-list-view')
 
 
-class ClickTrackingDetailView(View):
+class ClickTrackingDetailView(LoginRequiredMixin, View):
     def get(self, request, pk, *args, **kwargs):
         object = get_object_or_404(JustURL, pk=pk)
         reports = object.clicktracking_set.all().order_by('timestamp')

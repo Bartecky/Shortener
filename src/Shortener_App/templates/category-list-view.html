@@ -7,16 +7,18 @@
 {% block content %}
     <h3>Category List</h3>
     <a href="{% url 'home-view' %}"><input type="button" value="Home" class="btn btn-link"></a>
-    <ul class="list-group">
+    <table style="color: white">
+        <tr>
+            <th>Category name</th>
+            <th>Quantity of links</th>
+        </tr>
         {% for object in object_list %}
-            <li><strong><a href="{% url 'category-detail-view' object.pk %}">{{ object }}</a></strong> | {{ object.justurl_set.count }}
-                {% if object.justurl_set.count == 1 %}
-                    link
-                {% else %}
-                    links
-                {% endif %}
-            </li>
+        <tr>
+            <td><strong><a href="{% url 'category-detail-view' object.pk %}">{{ object }}</a></strong></td>
+            <td>{{ object.justurl_set.count }}</td>
+        </tr>
         {% endfor %}
-    </ul>
+
+    </table>
 
 {% endblock %}

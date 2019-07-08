@@ -9,11 +9,24 @@
     {% if object.description %}
     <p><strong>Description:</strong> {{ object.description }}</p>
     {% endif %}
+    <hr>
+    <p style="color: #33acff">Links from '{{ object }}' category were clicked :
+    {% if visits == 1 %}
+        {{ visits }} time
+    {% elif visits > 1 %}
+        {{ visits }} times
+    {% else %}
+        No visits
+        {% endif %}
+    </p>
     <small><a href="{% url 'category-update-view' object.pk %}">Update</a> | </small>
     <small><a href="{% url 'category-delete-view' object.pk %}">Delete</a></small>
     <hr>
     <h4>Links</h4>
     {% for link in object.justurl_set.all %}
         <a href="{% url 'url-detail-view' link.pk %}">{{ link.short_url }}</a><br>
+    {% empty %}
+        <p>No links here</p>
     {% endfor %}
+
 {% endblock %}
