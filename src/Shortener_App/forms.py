@@ -2,6 +2,7 @@ from django import forms
 from .models import JustURL, Category
 from django.core.validators import URLValidator
 from django.core.exceptions import ValidationError
+from .utils import check_input_url
 import re
 
 
@@ -16,16 +17,9 @@ class ShortUrlForm(forms.ModelForm):
             'category'
         ]
 
-
     def clean_input_url(self):
         url = self.cleaned_data['input_url']
-        if url.startswith('http://') or url.startswith('www.'):
-            result = url
-        else:
-            result = 'http://' + url
-
-        if not url.endswith(('.com', '.pl', '.de', '.uk')):
-            result += '.com'
+        result = check_input_url(url)
         try:
             URLValidator(result)
         except:
@@ -51,13 +45,7 @@ class JustURLForm(forms.ModelForm):
 
     def clean_input_url(self):
         url = self.cleaned_data['input_url']
-        if url.startswith('http://') or url.startswith('www.'):
-            result = url
-        else:
-            result = 'http://' + url
-
-        if not url.endswith(('.com', '.pl', '.de', '.uk')):
-            result += '.com'
+        result = check_input_url(url)
         try:
             URLValidator(result)
         except:
@@ -111,9 +99,8 @@ class CategoryUpdateModelForm(forms.ModelForm):
             'description'
         ]
 
+
 class CounterCountingForm(forms.ModelForm):
     class Meta:
         model = JustURL
         fields = []
-
-

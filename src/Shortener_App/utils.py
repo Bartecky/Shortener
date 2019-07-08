@@ -39,3 +39,13 @@ def get_client_ip(request):
         ip = request.META.get('REMOTE_ADDR')
     return ip
 
+
+def check_input_url(url):
+    if url.startswith('http://') or url.startswith('www.'):
+        result = url
+    else:
+        result = 'http://' + url
+    if not url.endswith(('.com', '.pl', '.de', '.uk')):
+        result += '.com'
+    return result
+

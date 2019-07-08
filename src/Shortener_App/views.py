@@ -1,12 +1,12 @@
 from django.shortcuts import render, get_object_or_404, reverse, redirect
 from django.urls import reverse_lazy
 from django.views import View
-from django.views.generic import CreateView, ListView, DetailView, UpdateView, DeleteView
+from django.views.generic import CreateView, ListView, UpdateView, DeleteView
 from django.contrib.auth.mixins import LoginRequiredMixin
 from .forms import ShortUrlForm, JustURLForm, CategoryModelForm, ManyURLSForm, JustULRUpdateForm, \
     CategoryUpdateModelForm, CounterCountingForm
 from .models import JustURL, Category, ClickTracking
-from .utils import create_short_url, token_generator, generate_csv, get_client_ip
+from .utils import create_short_url, token_generator, generate_csv, get_client_ip, check_input_url
 import re
 
 
@@ -129,11 +129,8 @@ class ShortManyURLSView(View):
             urls_list = re.findall(r"[\w.']+", urls)
             data_list = []
             for url in urls_list:
-                if not url.startswith('http://') or not url.startswith('www.'):
-                    url = 'http://' + url
-                if not url.endswith(('.com', '.pl', '.de', '.uk')):
-                    url += '.com'
-                instance = JustURL.objects.create(input_url=url, short_url=token_generator())
+                result = check_input_url(url)
+                instance = JustURL.objects.create(input_url=result, short_url=f'{request.get_host()}/{token_generator()}')
                 instance.save()
                 data = [instance.input_url, instance.short_url]
                 data_list.append(data)
