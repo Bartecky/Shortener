@@ -1,5 +1,5 @@
 <nav class="navbar navbar-expand-lg navbar-dark bg-dark">
-    <a class="navbar-brand" href="{% url 'home-view' %}">Shortener</a>
+    <a class="navbar-brand" href="{% url 'home-view' %}" style="color: #33acff  ">Shortener</a>
     <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNavDropdown"
             aria-controls="navbarNavDropdown" aria-expanded="false" aria-label="Toggle navigation">
         <span class="navbar-toggler-icon"></span>
@@ -9,12 +9,14 @@
             <li class="nav-item active">
                 <a class="nav-link" href="{% url 'add-many-urls' %}">Short many urls</a>
             </li>
+            {% if user.is_superuser %}
             <li class="nav-item active">
                 <a class="nav-link" href="{% url 'category-create-view' %}">Add category</a>
             </li>
             <li class="nav-item active">
                 <a class="nav-link" href="{% url 'category-list-view' %}">Categories</a>
             </li>
+            {% endif %}
         </ul>
     </div>
 </nav>

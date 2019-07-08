@@ -9,10 +9,17 @@
     <p>Parent URL : <a href="{{ object }}">{{ object }}</a></p>
     <p>Active -
         {% if object.active %}
-            Yes! <a href="{{ object }}"><input type="button" value="Redirect" class="btn btn-link"></a>
+            Yes!
+            <form method="post" action=""> {% csrf_token %}
+                {{ form }}
+                <input class="btn btn-link" value="{{ object.short_url }}" type="submit">
+            </form>
         {% else %}
         No | <span style="color: red">Disabled</span>
         {% endif %}
+    </p>
+    <p>
+        Counter: {{ object.count }}
     </p>
     <p>Category -
         {% if object.category %}

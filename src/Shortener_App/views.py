@@ -1,17 +1,15 @@
-from django.shortcuts import render, redirect
+from django.shortcuts import render, get_object_or_404, reverse, redirect
 from django.urls import reverse_lazy
 from django.views import View
 from django.views.generic import CreateView, ListView, DetailView, UpdateView, DeleteView
 from .forms import ShortUrlForm, JustURLForm, CategoryModelForm, ManyURLSForm, JustULRUpdateForm, \
-    CategoryUpdateModelForm
+    CategoryUpdateModelForm, CounterCountingForm
 from .models import JustURL, Category
-from .utils import create_short_url, token_generator, generate_csv
-
+from .utils import create_short_url, token_generator, generate_csv, get_client_ip
 import re
 
 
 class HomeView(View):
-
     def get(self, request, *args, **kwargs):
         form = ShortUrlForm()
         return render(request, 'home.html', {'form': form})
@@ -25,14 +23,51 @@ class HomeView(View):
             short_url = create_short_url(created)
             created.short_url = f'{request.get_host()}/{short_url}'
             created.save()
-            return render(request, 'short-url-success.html', {'object': created})
-        else:
-            return render(request, 'home.html', {'form': form})
+            if request.user.is_superuser:
+                return redirect(reverse('url-detail-view', kwargs={'pk': created.pk}))
+            return redirect(reverse('success-url-view', kwargs={'pk': created.pk}))
+        return render(request, 'home.html', {'form': form})
 
 
-class URLDetailView(DetailView):
-    queryset = JustURL.objects.all()
-    template_name = 'url-detail-view.html'
+class SuccessUrlView(View):
+    def get(self, request, pk, *args, **kwargs):
+        object = JustURL.objects.get(pk=pk)
+        form = CounterCountingForm()
+        return render(request, 'success-url-view.html', {'object': object,
+                                                         'form': form})
+
+    def post(self, request, pk, *args, **kwargs):
+        object = JustURL.objects.get(pk=pk)
+        form = CounterCountingForm(request.POST or None, initial={'input_url': object.input_url,
+                                                                  'short_url': object.short_url,
+                                                                  'active': object.active})
+        if form.is_valid():
+            object.count += 1
+            object.save()
+            # print(get_client_ip(request))
+            # print(request.META['HTTP_USER_AGENT'])
+            return link_redirect(request, pk)
+        return redirect('home-view')
+
+
+class URLDetailView(View):
+    def get(self, request, pk, *args, **kwargs):
+        form = CounterCountingForm()
+        object = JustURL.objects.get(pk=pk)
+        return render(request, 'url-detail-view.html', {'object': object,
+                                                        'form': form})
+
+    def post(self, request, pk, *args, **kwargs):
+        object = JustURL.objects.get(pk=pk)
+        form = CounterCountingForm(request.POST or None)
+        if form.is_valid():
+            object.count += 1
+            object.save()
+            # print(get_client_ip(request))
+            # print(request.META['HTTP_USER_AGENT'])
+            return link_redirect(request, pk)
+        return render(request, 'url-detail-view.html', {'object': object,
+                                                        'form': form})
 
 
 class URLUpdateView(UpdateView):
@@ -48,7 +83,6 @@ class URLDeleteView(DeleteView):
 
 
 class CustomShortURLCreateView(View):
-
     def get(self, request, *args, **kwargs):
         form = JustURLForm()
         return render(request, 'custom-short-url.html', {'form': form})
@@ -66,9 +100,10 @@ class CustomShortURLCreateView(View):
             created = JustURL.objects.create(input_url=url, short_url=f'{request.get_host()}/{short_url}',
                                              category=category)
             created.save()
-            return render(request, 'short-url-success.html', {'object': created})
-        else:
-            return render(request, 'home.html', {'form': form})
+            if request.user.is_superuser:
+                return redirect(reverse('url-detail-view', kwargs={'pk': created.pk}))
+            return redirect(reverse('success-url-view', kwargs={'pk': created.pk}))
+        return render(request, 'home.html', {'form': form})
 
 
 class ShortManyURLSView(View):
@@ -93,9 +128,8 @@ class ShortManyURLSView(View):
                 data = [instance.input_url, instance.short_url]
                 data_list.append(data)
             generate_csv(data_list)
-        return render(request, 'home.html', {
-            'form': ShortUrlForm,
-            'message': 'Success! Saved data to file.'})
+        return render(request, 'home.html', {'form': ShortUrlForm,
+                                             'message': 'Success! Saved data to file.'})
 
 
 class CategoryCreateView(CreateView):
@@ -124,3 +158,10 @@ class CategoryDeleteView(DeleteView):
     model = Category
     template_name = 'category-delete-view.html'
     success_url = reverse_lazy('category-list-view')
+
+
+def link_redirect(request, pk):
+    instance = get_object_or_404(JustURL, pk=pk)
+    return redirect(instance.input_url)
+
+

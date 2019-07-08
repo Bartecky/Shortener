@@ -1,24 +1,19 @@
 from django.db import models
 from django.urls import reverse_lazy
 
-# Categories = (
-#     ('1', 'Undefined'),
-#     ('2', 'IT'),
-#     ('3', 'Sport'),
-#     ('4', 'Media'),
-#     ('5', 'Movies'),
-#     ('6', 'Traveling'),
-#     ('7', 'Games'),
-#     ('8', 'Books'),
-#     ('9', 'Social Media'),
-#     ('10', 'News')
-# )
 
 class JustURL(models.Model):
     input_url = models.CharField(max_length=256)
     short_url = models.CharField(max_length=24, unique=True, blank=True, null=True)
     active = models.BooleanField(default=True)
     category = models.ForeignKey('Category', on_delete=models.CASCADE, blank=True, null=True)
+    count = models.IntegerField(default=0)
+
+    def __str__(self):
+        return self.input_url
+
+    def get_absolute_url(self):
+        return reverse_lazy('url-detail-view', kwargs={'pk': self.pk})
 
 
 class Category(models.Model):
@@ -32,7 +27,12 @@ class Category(models.Model):
         return self.name
 
     def get_absolute_url(self):
-        return reverse_lazy('home-view')
+        return reverse_lazy('category-detail-view', kwargs={'pk': self.pk})
 
 
-
+# class ClickTracking(models.Model):
+#     url = models.ManyToManyField(JustURL)
+#     client_ip = models.CharField(max_length=16)
+#     user_agent = models.CharField(max_length=128)
+#     updated = models.DateTimeField(auto_now=True)
+#     timestamp = models.DateTimeField(auto_now_add=True)

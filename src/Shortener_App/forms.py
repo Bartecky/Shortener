@@ -110,3 +110,10 @@ class CategoryUpdateModelForm(forms.ModelForm):
             'name',
             'description'
         ]
+
+class CounterCountingForm(forms.ModelForm):
+    class Meta:
+        model = JustURL
+        fields = []
+
+
