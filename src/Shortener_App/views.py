@@ -4,7 +4,7 @@ from django.views import View
 from django.views.generic import CreateView, ListView, DetailView, UpdateView, DeleteView
 from .forms import ShortUrlForm, JustURLForm, CategoryModelForm, ManyURLSForm, JustULRUpdateForm, \
     CategoryUpdateModelForm, CounterCountingForm
-from .models import JustURL, Category
+from .models import JustURL, Category, ClickTracking
 from .utils import create_short_url, token_generator, generate_csv, get_client_ip
 import re
 
@@ -38,14 +38,18 @@ class SuccessUrlView(View):
 
     def post(self, request, pk, *args, **kwargs):
         object = JustURL.objects.get(pk=pk)
-        form = CounterCountingForm(request.POST or None, initial={'input_url': object.input_url,
-                                                                  'short_url': object.short_url,
-                                                                  'active': object.active})
+        form = CounterCountingForm(request.POST or None)
         if form.is_valid():
             object.count += 1
+            ip = get_client_ip(request)
+            client_agent = request.META['HTTP_USER_AGENT']
+            clicktracker = ClickTracking.objects.create(
+                client_ip = ip,
+                user_agent = client_agent,
+            )
+            clicktracker.url.add(object)
+            clicktracker.save()
             object.save()
-            # print(get_client_ip(request))
-            # print(request.META['HTTP_USER_AGENT'])
             return link_redirect(request, pk)
         return redirect('home-view')
 
@@ -62,9 +66,15 @@ class URLDetailView(View):
         form = CounterCountingForm(request.POST or None)
         if form.is_valid():
             object.count += 1
+            ip = get_client_ip(request)
+            client_agent = request.META['HTTP_USER_AGENT']
+            clicktracker = ClickTracking.objects.create(
+                client_ip=ip,
+                user_agent=client_agent,
+            )
+            clicktracker.url.add(object)
+            clicktracker.save()
             object.save()
-            # print(get_client_ip(request))
-            # print(request.META['HTTP_USER_AGENT'])
             return link_redirect(request, pk)
         return render(request, 'url-detail-view.html', {'object': object,
                                                         'form': form})

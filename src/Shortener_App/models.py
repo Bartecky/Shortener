@@ -10,7 +10,7 @@ class JustURL(models.Model):
     count = models.IntegerField(default=0)
 
     def __str__(self):
-        return self.input_url
+        return f'{self.input_url} - {self.short_url}'
 
     def get_absolute_url(self):
         return reverse_lazy('url-detail-view', kwargs={'pk': self.pk})
@@ -30,9 +30,8 @@ class Category(models.Model):
         return reverse_lazy('category-detail-view', kwargs={'pk': self.pk})
 
 
-# class ClickTracking(models.Model):
-#     url = models.ManyToManyField(JustURL)
-#     client_ip = models.CharField(max_length=16)
-#     user_agent = models.CharField(max_length=128)
-#     updated = models.DateTimeField(auto_now=True)
-#     timestamp = models.DateTimeField(auto_now_add=True)
+class ClickTracking(models.Model):
+    url = models.ManyToManyField(JustURL)
+    client_ip = models.CharField(max_length=16)
+    user_agent = models.CharField(max_length=128)
+    timestamp = models.DateTimeField(auto_now_add=True)

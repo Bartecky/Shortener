@@ -6,7 +6,7 @@
 
 {% block content %}
     <h3>Details of {{ object.short_url }}</h3>
-    <p>Parent URL : <a href="{{ object }}">{{ object }}</a></p>
+    <p>Parent URL : <a href="{{ object }}">{{ object.input_url }}</a></p>
     <p>Active -
         {% if object.active %}
             Yes!
