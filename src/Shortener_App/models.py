@@ -36,6 +36,5 @@ class ClickTracking(models.Model):
     user_agent = models.CharField(max_length=128)
     timestamp = models.DateTimeField(auto_now_add=True)
 
-
     def __str__(self):
         return f'{self.timestamp}'

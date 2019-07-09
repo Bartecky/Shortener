@@ -9,7 +9,8 @@ import re
 
 class ShortUrlForm(forms.ModelForm):
     input_url = forms.CharField(label='', widget=forms.TextInput(attrs={'placeholder': 'http://'}))
-    category = forms.ModelChoiceField(label='Choose category', queryset=Category.objects.all().order_by('name'), required=False)
+    category = forms.ModelChoiceField(label='Choose category', queryset=Category.objects.all().order_by('name'),
+                                      required=False)
 
     class Meta:
         model = JustURL
@@ -30,7 +31,8 @@ class ShortUrlForm(forms.ModelForm):
 
 class JustURLForm(forms.ModelForm):
     input_url = forms.CharField(label='', widget=forms.TextInput(attrs={'placeholder': 'http://'}))
-    short_url = forms.CharField(label='', widget=forms.TextInput(attrs={'placeholder': 'your token here'}), max_length=SHORTCODE, min_length=SHORTCODE)
+    short_url = forms.CharField(label='', widget=forms.TextInput(attrs={'placeholder': 'your token here'}),
+                                max_length=SHORTCODE, min_length=SHORTCODE)
 
     class Meta:
         model = JustURL
@@ -57,7 +59,8 @@ class JustURLForm(forms.ModelForm):
 
 class ManyURLSForm(forms.ModelForm):
     input_url = forms.CharField(label='', max_length=1024, widget=forms.Textarea(attrs={
-        'cols': 40, 'rows': 15, 'placeholder': 'paste here many links separated by special characters, excluding "." and catch your csv file!'
+        'cols': 40, 'rows': 15,
+        'placeholder': 'paste here many links separated by special characters, excluding "." and catch your csv file!'
     }))
 
     class Meta:

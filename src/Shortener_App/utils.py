@@ -29,6 +29,7 @@ def generate_csv(data):
         writer.writerows(data)
     csvFile.close()
 
+
 def get_client_ip(request):
     """
     Return client IP address
@@ -49,7 +50,6 @@ def check_input_url(url):
         result = url
     else:
         result = 'http://' + url
-    if not url.endswith(('.com', '.pl', '.de', '.uk')):
+    if not url.endswith(('.com', '.pl', '.de', '.uk', '.org')):
         result += '.com'
     return result
-

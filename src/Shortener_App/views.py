@@ -130,7 +130,8 @@ class ShortManyURLSView(View):
             data_list = []
             for url in urls_list:
                 result = check_input_url(url)
-                instance = JustURL.objects.create(input_url=result, short_url=f'{request.get_host()}/{token_generator()}')
+                instance = JustURL.objects.create(input_url=result,
+                                                  short_url=f'{request.get_host()}/{token_generator()}')
                 instance.save()
                 data = [instance.input_url, instance.short_url]
                 data_list.append(data)
