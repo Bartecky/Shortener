@@ -10,7 +10,7 @@
         <h2 style="color: limegreen">{{ message }}</h2>
     {% endif %}
 
-    <h3>Paste your long url and look what i can...</h3>
+    <h3>Paste your long url here...</h3>
     <form method="post" action=""> {% csrf_token %}
         {{ form|crispy }}<br>
         <input class="btn btn-primary" type="submit" value="Shorten!">

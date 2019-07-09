@@ -1,4 +1,5 @@
 from django.urls import reverse_lazy
+
 """
 Django settings for Shortener_Project project.
 
@@ -73,14 +74,14 @@ WSGI_APPLICATION = 'Shortener_Project.wsgi.application'
 # Database
 # https://docs.djangoproject.com/en/2.2/ref/settings/#databases
 
+
+# DB CONFIGURATION TO GITHUB
+
 DATABASES = {
     'default': {
-        'HOST': '127.0.0.1',
-        'NAME': 'shortener',
-        'ENGINE': 'django.db.backends.postgresql',
-        'USER': 'postgres',
-        'PASSWORD': 'makemeshorter',
-    },
+        'ENGINE': 'django.db.backends.sqlite3',
+        'NAME': 'shortener_database',
+    }
 }
 
 # Password validation

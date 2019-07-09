@@ -38,4 +38,4 @@ class ClickTracking(models.Model):
 
 
     def __str__(self):
-        return f'{self.timestamp} - {self.url}'
+        return f'{self.timestamp}'

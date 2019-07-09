@@ -15,7 +15,7 @@
         {% for object in object_list %}
         <tr>
             <td><strong><a href="{% url 'category-detail-view' object.pk %}">{{ object }}</a></strong></td>
-            <td>{{ object.justurl_set.count }}</td>
+            <td style="text-align: center">{{ object.justurl_set.count }}</td>
         </tr>
         {% endfor %}
     </table>

@@ -3,6 +3,7 @@ from .models import JustURL, Category
 from django.core.validators import URLValidator
 from django.core.exceptions import ValidationError
 from .utils import check_input_url
+from Shortener_Project.settings import SHORTCODE
 import re
 
 
@@ -28,7 +29,8 @@ class ShortUrlForm(forms.ModelForm):
 
 
 class JustURLForm(forms.ModelForm):
-    short_url = forms.CharField(max_length=8, min_length=8)
+    input_url = forms.CharField(label='', widget=forms.TextInput(attrs={'placeholder': 'http://'}))
+    short_url = forms.CharField(label='', widget=forms.TextInput(attrs={'placeholder': 'your token here'}), max_length=SHORTCODE, min_length=SHORTCODE)
 
     class Meta:
         model = JustURL
@@ -55,7 +57,7 @@ class JustURLForm(forms.ModelForm):
 
 class ManyURLSForm(forms.ModelForm):
     input_url = forms.CharField(label='', max_length=1024, widget=forms.Textarea(attrs={
-        'cols': 40, 'rows': 15, 'placeholder': 'Paste here many links separated by special characters, excluding "."'
+        'cols': 40, 'rows': 15, 'placeholder': 'paste here many links separated by special characters, excluding "." and catch your csv file!'
     }))
 
     class Meta:
@@ -77,7 +79,7 @@ class JustULRUpdateForm(forms.ModelForm):
 class CategoryModelForm(forms.ModelForm):
     name = forms.CharField(label='', widget=forms.TextInput(attrs={'placeholder': 'enter category name'}))
     description = forms.CharField(required=False, widget=forms.Textarea(attrs={
-        'cols': 40, 'rows': 15, 'placeholder': 'Describe category'
+        'cols': 40, 'rows': 15, 'placeholder': 'describe category'
     }))
 
     class Meta:

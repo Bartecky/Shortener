@@ -146,6 +146,7 @@ class CategoryCreateView(LoginRequiredMixin, CreateView):
 class CategoryListView(LoginRequiredMixin, ListView):
     queryset = Category.objects.all().order_by('name')
     template_name = 'category-list-view.html'
+    paginate_by = 15
 
 
 class CategoryDetailView(LoginRequiredMixin, View):

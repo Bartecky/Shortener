@@ -13,5 +13,11 @@
 
     {% endblock %}
     </div>
+
+    {% if is_paginated %}
+        <div class="container" >
+            {% include 'pagin.html' %}
+         </div>
+    {% endif %}
 </body>
 </html>
