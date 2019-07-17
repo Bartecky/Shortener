@@ -36,5 +36,5 @@ urlpatterns = [
     #  click tracking
     re_path(r'^(?P<pk>(\d)+)/reports/$', ClickTrackingDetailView.as_view(), name='clicktracking-detail-view'),
     #  redirecting
-    re_path(r'^(?P<pk>(\d)+)/$', link_redirect, name='url-redirect-view'),
+    re_path(r'^(?P<token>(\w)+)/$', link_redirect, name='url-redirect-view'),
 ]

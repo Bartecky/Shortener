@@ -7,6 +7,7 @@ from .forms import ShortUrlForm, JustURLForm, CategoryModelForm, ManyURLSForm, J
     CategoryUpdateModelForm, CounterCountingForm
 from .models import JustURL, Category, ClickTracking
 from .utils import create_short_url, token_generator, generate_csv, get_client_ip, check_input_url
+from Shortener_Project.settings import SHORTCODE
 import re
 
 
@@ -41,7 +42,6 @@ class SuccessUrlView(View):
         object = JustURL.objects.get(pk=pk)
         form = CounterCountingForm(request.POST or None)
         if form.is_valid():
-            object.count += 1
             ip = get_client_ip(request)
             client_agent = request.META['HTTP_USER_AGENT']
             clicktracker = ClickTracking.objects.create(
@@ -50,8 +50,8 @@ class SuccessUrlView(View):
             )
             clicktracker.url.add(object)
             clicktracker.save()
-            object.save()
-            return link_redirect(request, pk)
+            token = object.short_url[-SHORTCODE:]
+            return link_redirect(request, token)
         return redirect('home-view')
 
 
@@ -66,7 +66,6 @@ class URLDetailView(LoginRequiredMixin, View):
         object = JustURL.objects.get(pk=pk)
         form = CounterCountingForm(request.POST or None)
         if form.is_valid():
-            object.count += 1
             ip = get_client_ip(request)
             client_agent = request.META['HTTP_USER_AGENT']
             clicktracker = ClickTracking.objects.create(
@@ -75,8 +74,8 @@ class URLDetailView(LoginRequiredMixin, View):
             )
             clicktracker.url.add(object)
             clicktracker.save()
-            object.save()
-            return link_redirect(request, pk)
+            token = object.short_url[-SHORTCODE:]
+            return link_redirect(request, token)
         return render(request, 'url-detail-view.html', {'object': object,
                                                         'form': form})
 
@@ -194,6 +193,8 @@ class ClickTrackingDetailView(LoginRequiredMixin, View):
                                                                   'reports': reports})
 
 
-def link_redirect(request, pk):
-    instance = get_object_or_404(JustURL, pk=pk)
+def link_redirect(request, token):
+    instance = JustURL.objects.get(short_url__icontains=token)
+    instance.count += 1
+    instance.save()
     return redirect(instance.input_url)
