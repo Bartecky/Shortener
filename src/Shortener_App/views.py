@@ -1,4 +1,4 @@
-from django.shortcuts import render, get_object_or_404, reverse, redirect
+from django.shortcuts import render, get_object_or_404, reverse, redirect, HttpResponse
 from django.urls import reverse_lazy
 from django.views import View
 from django.views.generic import CreateView, ListView, UpdateView, DeleteView
@@ -135,7 +135,10 @@ class ShortManyURLSView(View):
                 instance.save()
                 data = [instance.input_url, instance.short_url]
                 data_list.append(data)
-            generate_csv(data_list)
+
+            response = HttpResponse(content_type='text/csv')
+            response['Content-Disposition'] = 'attachment; filename="many_urls.csv"'
+            return generate_csv(data_list, response)
         return redirect('home-view')
 
 
@@ -148,6 +151,18 @@ class CategoryListView(LoginRequiredMixin, ListView):
     queryset = Category.objects.all().order_by('name')
     template_name = 'category-list-view.html'
     paginate_by = 15
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        quantity = 0
+        urls_without_category = JustURL.objects.filter(category=None).count()
+        print(urls_without_category)
+        queryset = Category.objects.all()
+        for cat in queryset:
+            quantity += cat.justurl_set.all().count()
+        context['number_of_links'] = quantity
+        context['urls_without_category'] = urls_without_category
+        return context
 
 
 class CategoryDetailView(LoginRequiredMixin, View):

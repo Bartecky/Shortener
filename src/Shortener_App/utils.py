@@ -20,19 +20,19 @@ def create_short_url(instance):
     return token
 
 
-def generate_csv(data):
+def generate_csv(data, response):
     """
-    Creates new csv file with rows containing data, closes file
+    Creates new csv file with rows containing data
     """
-    with open('many_urls.csv', 'a') as csvFile:
-        writer = csv.writer(csvFile, delimiter=';')
-        writer.writerows(data)
-    csvFile.close()
+    writer = csv.writer(response, delimiter=';')
+    writer.writerows(data)
+    return response
+
 
 
 def get_client_ip(request):
     """
-    Return client IP address
+    Returns client IP address
     """
     x_forwarded_for = request.META.get('HTTP_X_FORWARDED_FOR')
     if x_forwarded_for:

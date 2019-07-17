@@ -7,6 +7,7 @@
 {% block content %}
     <h3>Category List</h3>
     <a href="{% url 'home-view' %}"><input type="button" value="Home" class="btn btn-link"></a>
+<p>Number of links : <strong>{{ number_of_links }}</strong>, including <strong>{{ urls_without_category }}</strong> without category.</p>
     <table style="color: white">
         <tr>
             <th>Category name</th>
